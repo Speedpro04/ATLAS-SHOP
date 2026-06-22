@@ -57,10 +57,20 @@ def generate_reply(
     }
     if settings.openai_temperature is not None:
         kwargs["temperature"] = settings.openai_temperature
+    # Controla o raciocínio dos modelos gpt-5 (via extra_body p/ compatibilidade do SDK),
+    # senão o raciocínio consome todo o orçamento de tokens e a resposta volta vazia.
+    if settings.openai_model.startswith("gpt-5") and settings.openai_reasoning_effort:
+        kwargs["extra_body"] = {"reasoning_effort": settings.openai_reasoning_effort}
 
     try:
         resp = _client.chat.completions.create(**kwargs)
-        text = (resp.choices[0].message.content or "").strip()
+        choice = resp.choices[0]
+        text = (choice.message.content or "").strip()
+        if not text:
+            logger.warning(
+                "Resposta vazia do modelo (finish_reason=%s, usage=%s) — usando fallback.",
+                getattr(choice, "finish_reason", "?"), getattr(resp, "usage", "?"),
+            )
         return text or FALLBACK_REPLY
     except TypeError:
         # SDKs/modelos mais antigos usam max_tokens em vez de max_completion_tokens

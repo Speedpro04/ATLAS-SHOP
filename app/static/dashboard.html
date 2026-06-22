@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vega · Painel de Vendas — Yachts Atlas</title>
+<title>ATLAS · Painel de Vendas — Yachts Atlas</title>
+<link rel="icon" href="/static/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" href="/static/favicon-32.png" sizes="32x32" />
 <style>
   :root{
     --turquesa:#17A2A6;        /* azul turquesa */
@@ -26,14 +28,17 @@
 
   /* ---- Topo ---- */
   header{
-    background:linear-gradient(110deg,var(--turquesa-esc),var(--turquesa) 70%);
-    color:#fff;padding:22px 34px;display:flex;align-items:center;justify-content:space-between;
-    box-shadow:0 4px 20px rgba(14,124,127,.25);
+    background:linear-gradient(120deg,#3BCEC2,#46DBCF 70%);
+    color:#08524D;box-shadow:0 4px 18px rgba(50,180,170,.28);
+  }
+  .header-inner{
+    max-width:1200px;margin:0 auto;padding:22px 28px;
+    display:flex;align-items:center;justify-content:space-between;
   }
   .brand{display:flex;align-items:center;gap:14px}
   .brand .logo{
-    width:52px;height:52px;border-radius:var(--raio);
-    display:grid;place-items:center;font-size:24px;overflow:hidden;
+    width:58px;height:58px;border-radius:var(--raio);
+    display:grid;place-items:center;font-size:24px;
   }
   .brand .logo img{width:100%;height:100%;object-fit:contain;display:block;
     filter:drop-shadow(0 2px 4px rgba(0,0,0,.18))}
@@ -46,7 +51,7 @@
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(244,196,48,.6)}70%{box-shadow:0 0 0 9px rgba(244,196,48,0)}100%{box-shadow:0 0 0 0 rgba(244,196,48,0)}}
   .live .upd{opacity:.85}
 
-  main{padding:26px 34px 48px;max-width:1320px;margin:0 auto}
+  main{padding:26px 28px 48px;max-width:1200px;margin:0 auto}
 
   .banner{
     background:#FFF7E6;border:1px solid var(--amarelo);color:#8a6d1f;
@@ -126,17 +131,18 @@
 </head>
 <body>
   <header>
-    <div class="brand">
-      <div class="logo"><img src="/static/logo.png" alt="Atlas"
-           onerror="this.outerHTML='&lt;div class=\'fallback\'&gt;🛥️&lt;/div&gt;'"></div>
-      <div>
-        <h1>Vega · Painel de Vendas</h1>
-        <small>Yachts Atlas — Programa Marinas Fundadoras</small>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo"><img src="/static/logo.png" alt="Yachts Atlas"></div>
+        <div>
+          <h1>ATLAS · Painel de Vendas</h1>
+          <small>Yachts Atlas — Programa Marinas Fundadoras</small>
+        </div>
       </div>
-    </div>
-    <div class="live">
-      <span class="upd" id="upd">conectando…</span>
-      <span class="dot"></span>
+      <div class="live">
+        <span class="upd" id="upd">conectando…</span>
+        <span class="dot"></span>
+      </div>
     </div>
   </header>
 
@@ -171,7 +177,7 @@
     </div>
   </main>
 
-  <footer>Vega · um produto Axos Hub — atualiza automaticamente a cada 15s</footer>
+  <footer>ATLAS · um produto Axos Hub — atualiza automaticamente a cada 15s</footer>
 
 <script>
 const ESTAGIOS = [
@@ -209,7 +215,7 @@ function renderFunil(funil,total){
 
 function renderLeads(leads){
   const el=document.getElementById("leads");
-  if(!leads||!leads.length){el.innerHTML=`<div class="empty"><span class="big">🫧</span>Nenhum lead ainda.<br>Assim que a Vega conversar no WhatsApp, aparece aqui.</div>`;return;}
+  if(!leads||!leads.length){el.innerHTML=`<div class="empty"><span class="big">🫧</span>Nenhum lead ainda.<br>Assim que o ATLAS conversar no WhatsApp, aparece aqui.</div>`;return;}
   el.innerHTML = leads.map(l=>`
     <div class="lead">
       <div class="av">${escapeHtml(iniciais(l.nome,l.telefone)).toUpperCase()}</div>
@@ -225,7 +231,7 @@ function renderFeed(msgs){
   const el=document.getElementById("feed");
   if(!msgs||!msgs.length){el.innerHTML=`<div class="empty"><span class="big">💬</span>Sem mensagens ainda.</div>`;return;}
   el.innerHTML = msgs.map(m=>{
-    const who=m.papel==="assistant"?"Vega":"Lead";
+    const who=m.papel==="assistant"?"ATLAS":"Lead";
     return `<div class="msg">
       <div class="meta"><span class="who ${m.papel}">${who}</span>${maskTel(m.telefone)}${m.canal==="audio"?" · 🎙️":""}<span style="margin-left:auto">${tempoRel(m.created_at)}</span></div>
       <div class="txt ${m.papel}">${escapeHtml(m.conteudo)}</div>

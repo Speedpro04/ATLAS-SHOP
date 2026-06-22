@@ -36,6 +36,11 @@ def root() -> FileResponse:
     return FileResponse(_DASHBOARD_HTML, media_type="text/html")
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon() -> FileResponse:
+    return FileResponse(_STATIC_DIR / "favicon.ico", media_type="image/x-icon")
+
+
 @app.get("/status")
 def status() -> dict[str, str]:
     return {"service": "vega", "status": "ok"}

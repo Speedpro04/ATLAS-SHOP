@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     openai_model: str = "gpt-5-mini"
     openai_temperature: float | None = None
     openai_max_output_tokens: int = 600
+    # gpt-5 são modelos de raciocínio: 'minimal'|'low'|'medium'|'high'.
+    # 'low' deixa tokens de saída sobrando p/ a resposta (evita conteúdo vazio).
+    openai_reasoning_effort: str = "low"
 
     # Evolution API (WhatsApp)
     evolution_base_url: str = ""

@@ -32,7 +32,7 @@ No EasyPanel → projeto → **+ Service** → **App**:
   SUPABASE_SERVICE_KEY=sb_secret_...
   EVOLUTION_BASE_URL=https://evoapi.axoshub.com
   EVOLUTION_API_KEY=...
-  EVOLUTION_INSTANCE=axos-evoapi
+  EVOLUTION_INSTANCE=Ativo_Hub
   VOICE_REPLY_ENABLED=false
   ```
 - **Deploy** → aguarde o build. Teste: `https://SEU-DOMINIO/health` deve dar `{"status":"ok","redis":true}`.
@@ -49,7 +49,7 @@ No EasyPanel → projeto → **+ Service** → **App**:
 - **Deploy.**
 
 ## 4. Apontar o webhook da Evolution
-Na Evolution (instância `axos-evoapi`), configure o webhook para:
+Na Evolution (instância `Ativo_Hub`), configure o webhook para:
 ```
 https://SEU-DOMINIO/webhook/evolution?token=SEU_WEBHOOK_TOKEN
 Eventos: MESSAGES_UPSERT   ·   Base64 de mídia: ATIVADO
