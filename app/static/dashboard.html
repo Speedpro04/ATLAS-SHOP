@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vega · Painel de Vendas — Yachts Atlas</title>
+<style>
+  :root{
+    --turquesa:#17A2A6;        /* azul turquesa */
+    --turquesa-esc:#0E7C7F;
+    --turquesa-clr:#D6F0F0;
+    --branco:#FFFFFF;
+    --cinza:#EEF2F4;           /* cinza claro (fundo) */
+    --cinza-borda:#E2E8EB;
+    --musgo:#708A4F;           /* verde musgo */
+    --laranja:#E8843C;
+    --amarelo:#F4C430;
+    --texto:#26343C;
+    --muted:#7B8A92;
+    --raio:5px;                /* raio dos cards: 5px */
+    --sombra:0 1px 3px rgba(38,52,60,.08), 0 6px 18px rgba(38,52,60,.05);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cinza);color:var(--texto);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+  /* ---- Topo ---- */
+  header{
+    background:linear-gradient(110deg,var(--turquesa-esc),var(--turquesa) 70%);
+    color:#fff;padding:22px 34px;display:flex;align-items:center;justify-content:space-between;
+    box-shadow:0 4px 20px rgba(14,124,127,.25);
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand .logo{
+    width:52px;height:52px;border-radius:var(--raio);
+    display:grid;place-items:center;font-size:24px;overflow:hidden;
+  }
+  .brand .logo img{width:100%;height:100%;object-fit:contain;display:block;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.18))}
+  .brand .logo .fallback{background:rgba(255,255,255,.16);width:100%;height:100%;
+    display:grid;place-items:center;border-radius:var(--raio)}
+  .brand h1{font-size:20px;font-weight:700;letter-spacing:.2px}
+  .brand small{display:block;font-weight:400;opacity:.82;font-size:12.5px;margin-top:2px}
+  .live{display:flex;align-items:center;gap:14px;font-size:13px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--amarelo);box-shadow:0 0 0 0 rgba(244,196,48,.7);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(244,196,48,.6)}70%{box-shadow:0 0 0 9px rgba(244,196,48,0)}100%{box-shadow:0 0 0 0 rgba(244,196,48,0)}}
+  .live .upd{opacity:.85}
+
+  main{padding:26px 34px 48px;max-width:1320px;margin:0 auto}
+
+  .banner{
+    background:#FFF7E6;border:1px solid var(--amarelo);color:#8a6d1f;
+    border-radius:var(--raio);padding:12px 16px;margin-bottom:20px;font-size:13.5px;display:none;
+  }
+
+  /* ---- KPIs ---- */
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px}
+  .kpi{
+    background:var(--branco);border-radius:var(--raio);padding:18px 20px;box-shadow:var(--sombra);
+    border-top:3px solid var(--turquesa);position:relative;overflow:hidden;
+  }
+  .kpi .label{font-size:12.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  .kpi .value{font-size:34px;font-weight:800;margin-top:6px;line-height:1}
+  .kpi .ico{position:absolute;top:14px;right:16px;font-size:22px;opacity:.18}
+  .kpi.q{border-top-color:var(--amarelo)}
+  .kpi.a{border-top-color:var(--laranja)}
+  .kpi.g{border-top-color:var(--musgo)}
+  .kpi.m{border-top-color:var(--turquesa-esc)}
+
+  /* ---- Grid de painéis ---- */
+  .grid{display:grid;grid-template-columns:1.15fr 1fr;gap:22px}
+  .card{background:var(--branco);border-radius:var(--raio);box-shadow:var(--sombra);overflow:hidden}
+  .card h2{
+    font-size:14px;font-weight:700;padding:16px 20px;border-bottom:1px solid var(--cinza-borda);
+    display:flex;align-items:center;gap:9px;color:var(--texto);
+  }
+  .card h2 .tag{margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:600}
+  .card .body{padding:18px 20px}
+
+  /* ---- Funil ---- */
+  .funil-row{margin-bottom:14px}
+  .funil-row:last-child{margin-bottom:0}
+  .funil-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+  .funil-top .n{font-weight:700}
+  .bar{height:12px;border-radius:50px;background:var(--cinza);overflow:hidden}
+  .bar > span{display:block;height:100%;border-radius:50px;transition:width .6s cubic-bezier(.2,.8,.2,1);min-width:2px}
+  .c-novo{background:var(--turquesa-clr)} .t-novo{color:var(--turquesa)}
+  .c-em_conversa{background:var(--turquesa)} .t-em_conversa{color:var(--turquesa-esc)}
+  .c-qualificado{background:var(--amarelo)} .t-qualificado{color:#b8901a}
+  .c-agendado{background:var(--laranja)} .t-agendado{color:var(--laranja)}
+  .c-ganho{background:var(--musgo)} .t-ganho{color:var(--musgo)}
+  .c-perdido{background:#c3ccd1} .t-perdido{color:var(--muted)}
+
+  /* ---- Leads recentes ---- */
+  .lead{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--cinza-borda)}
+  .lead:last-child{border-bottom:none}
+  .lead .av{width:38px;height:38px;border-radius:var(--raio);background:var(--turquesa-clr);color:var(--turquesa-esc);
+    display:grid;place-items:center;font-weight:700;font-size:14px;flex:none}
+  .lead .info{flex:1;min-width:0}
+  .lead .nome{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lead .sub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:50px;white-space:nowrap}
+  .p-novo{background:var(--turquesa-clr);color:var(--turquesa-esc)}
+  .p-em_conversa{background:#cdeced;color:var(--turquesa-esc)}
+  .p-qualificado{background:#fbeec0;color:#9c7913}
+  .p-agendado{background:#fbe0cb;color:#b85f1e}
+  .p-ganho{background:#dfe9d2;color:#4f6838}
+  .p-perdido{background:#e7ecee;color:var(--muted)}
+
+  /* ---- Feed de mensagens ---- */
+  .msg{padding:10px 0;border-bottom:1px solid var(--cinza-borda)}
+  .msg:last-child{border-bottom:none}
+  .msg .meta{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);margin-bottom:3px}
+  .who{font-weight:700;padding:1px 7px;border-radius:50px;font-size:10.5px}
+  .who.user{background:var(--cinza);color:var(--texto)}
+  .who.assistant{background:var(--turquesa);color:#fff}
+  .msg .txt{font-size:13px;line-height:1.45;color:#3a4a52}
+  .msg .txt.assistant{color:var(--turquesa-esc)}
+
+  .empty{text-align:center;color:var(--muted);font-size:13px;padding:30px 10px}
+  .empty .big{font-size:30px;display:block;margin-bottom:8px;opacity:.5}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
+  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo"><img src="/static/logo.png" alt="Atlas"
+           onerror="this.outerHTML='&lt;div class=\'fallback\'&gt;🛥️&lt;/div&gt;'"></div>
+      <div>
+        <h1>Vega · Painel de Vendas</h1>
+        <small>Yachts Atlas — Programa Marinas Fundadoras</small>
+      </div>
+    </div>
+    <div class="live">
+      <span class="upd" id="upd">conectando…</span>
+      <span class="dot"></span>
+    </div>
+  </header>
+
+  <main>
+    <div class="banner" id="banner">⚠️ Sem conexão com o Supabase — verifique as credenciais no <code>.env</code>.</div>
+
+    <section class="kpis">
+      <div class="kpi">      <div class="label">Leads totais</div>   <span class="ico">👥</span> <div class="value" id="k-total">–</div></div>
+      <div class="kpi q">    <div class="label">Qualificados</div>   <span class="ico">⭐</span> <div class="value" id="k-qual">–</div></div>
+      <div class="kpi a">    <div class="label">Agendados</div>      <span class="ico">📅</span> <div class="value" id="k-agen">–</div></div>
+      <div class="kpi g">    <div class="label">Ganhos</div>         <span class="ico">🏆</span> <div class="value" id="k-ganho">–</div></div>
+      <div class="kpi m">    <div class="label">Mensagens hoje</div> <span class="ico">💬</span> <div class="value" id="k-msg">–</div></div>
+    </section>
+
+    <div class="grid">
+      <div class="card">
+        <h2>📊 Funil de vendas <span class="tag" id="funil-total"></span></h2>
+        <div class="body" id="funil"></div>
+      </div>
+
+      <div class="card">
+        <h2>👥 Leads recentes</h2>
+        <div class="body" id="leads"></div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:22px;grid-template-columns:1fr">
+      <div class="card">
+        <h2>💬 Atividade recente <span class="tag">últimas mensagens</span></h2>
+        <div class="body" id="feed"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>Vega · um produto Axos Hub — atualiza automaticamente a cada 15s</footer>
+
+<script>
+const ESTAGIOS = [
+  ["novo","Novo"],["em_conversa","Em conversa"],["qualificado","Qualificado"],
+  ["agendado","Agendado"],["ganho","Ganho"],["perdido","Perdido"]
+];
+
+function escapeHtml(s){return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function iniciais(nome,tel){
+  if(nome){const p=nome.trim().split(/\s+/);return ((p[0]||"")[0]||"")+((p[1]||"")[0]||"");}
+  return (tel||"?").slice(-2);
+}
+function maskTel(t){if(!t)return "";return t.length>4 ? t.slice(0,4)+"•••"+t.slice(-4):t;}
+function rotuloEstagio(e){const f=ESTAGIOS.find(x=>x[0]===e);return f?f[1]:e;}
+function tempoRel(iso){
+  if(!iso)return "";
+  const d=new Date(iso), diff=(Date.now()-d.getTime())/1000;
+  if(diff<60)return "agora";
+  if(diff<3600)return Math.floor(diff/60)+" min";
+  if(diff<86400)return Math.floor(diff/3600)+" h";
+  return Math.floor(diff/86400)+" d";
+}
+
+function renderFunil(funil,total){
+  const max=Math.max(1,...Object.values(funil));
+  document.getElementById("funil-total").textContent = total+" leads";
+  document.getElementById("funil").innerHTML = ESTAGIOS.map(([k,lbl])=>{
+    const n=funil[k]||0, w=Math.round((n/max)*100);
+    return `<div class="funil-row">
+      <div class="funil-top"><span class="t-${k}">${lbl}</span><span class="n">${n}</span></div>
+      <div class="bar"><span class="c-${k}" style="width:${w}%"></span></div>
+    </div>`;
+  }).join("");
+}
+
+function renderLeads(leads){
+  const el=document.getElementById("leads");
+  if(!leads||!leads.length){el.innerHTML=`<div class="empty"><span class="big">🫧</span>Nenhum lead ainda.<br>Assim que a Vega conversar no WhatsApp, aparece aqui.</div>`;return;}
+  el.innerHTML = leads.map(l=>`
+    <div class="lead">
+      <div class="av">${escapeHtml(iniciais(l.nome,l.telefone)).toUpperCase()}</div>
+      <div class="info">
+        <div class="nome">${escapeHtml(l.nome||maskTel(l.telefone))}</div>
+        <div class="sub">${escapeHtml(l.marina_nome||maskTel(l.telefone))} · ${l.total_mensagens||0} msgs · ${tempoRel(l.ultima_mensagem_em)}</div>
+      </div>
+      <span class="pill p-${l.estagio}">${rotuloEstagio(l.estagio)}</span>
+    </div>`).join("");
+}
+
+function renderFeed(msgs){
+  const el=document.getElementById("feed");
+  if(!msgs||!msgs.length){el.innerHTML=`<div class="empty"><span class="big">💬</span>Sem mensagens ainda.</div>`;return;}
+  el.innerHTML = msgs.map(m=>{
+    const who=m.papel==="assistant"?"Vega":"Lead";
+    return `<div class="msg">
+      <div class="meta"><span class="who ${m.papel}">${who}</span>${maskTel(m.telefone)}${m.canal==="audio"?" · 🎙️":""}<span style="margin-left:auto">${tempoRel(m.created_at)}</span></div>
+      <div class="txt ${m.papel}">${escapeHtml(m.conteudo)}</div>
+    </div>`;
+  }).join("");
+}
+
+async function load(){
+  try{
+    const r=await fetch("/api/dashboard/stats",{cache:"no-store"});
+    const d=await r.json();
+    document.getElementById("banner").style.display = d.ok ? "none" : "block";
+    document.getElementById("k-total").textContent = d.total_leads;
+    document.getElementById("k-qual").textContent  = d.qualificados;
+    document.getElementById("k-agen").textContent  = d.agendados;
+    document.getElementById("k-ganho").textContent = d.ganhos;
+    document.getElementById("k-msg").textContent   = d.mensagens_hoje;
+    renderFunil(d.funil, d.total_leads);
+    renderLeads(d.leads_recentes);
+    renderFeed(d.mensagens_recentes);
+    const now=new Date();
+    document.getElementById("upd").textContent = "atualizado "+now.toLocaleTimeString("pt-BR");
+  }catch(e){
+    document.getElementById("upd").textContent = "erro ao atualizar";
+    document.getElementById("banner").style.display="block";
+  }
+}
+load();
+setInterval(load, 15000);
+</script>
+</body>
+</html>

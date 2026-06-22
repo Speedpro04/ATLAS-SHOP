@@ -1,0 +1,23 @@
+# Secrets — NUNCA comitar
+.env
+*.env
+!.env.example
+
+# Credenciais em texto — NUNCA comitar
+*credenciais*
+*CREDENCIAIS*
+logo-original*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# SO / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
