@@ -1,9 +1,9 @@
-"""Tasks do Celery — onde a Vega de fato pensa e responde.
+"""Tasks do Celery — onde a Solara de fato pensa e responde.
 
 Fluxo de process_message:
   1. Se veio áudio -> OmniVoice STT transcreve.
   2. Carrega histórico + perfil do lead (Redis).
-  3. GPT-5-mini gera a resposta (persona Vega + SPIN).
+  3. GPT-5-mini gera a resposta (persona Solara + SPIN).
   4. Salva no histórico.
   5. Envia texto pela Evolution; se for curta e sem preço/link, também manda áudio.
 """
@@ -18,7 +18,7 @@ from app.celery_app import celery_app
 from app.config import settings
 from app.services import evolution, llm, supabase_db, voice
 
-logger = logging.getLogger("vega.tasks")
+logger = logging.getLogger("solara.tasks")
 
 # Padrões que NÃO devem ir em áudio (precisam ser lidos/clicados)
 _NO_AUDIO = re.compile(r"(https?://|www\.|US\$|R\$|@|\b\d{2,}\b)", re.IGNORECASE)
@@ -34,7 +34,7 @@ def _should_send_audio(text: str) -> bool:
     return True
 
 
-@celery_app.task(name="vega.process_message", bind=True, max_retries=2)
+@celery_app.task(name="solara.process_message", bind=True, max_retries=2)
 def process_message(self, msg: dict) -> str:
     """Processa uma mensagem recebida. `msg` é o IncomingMessage serializado."""
     phone = msg["phone"]
@@ -81,7 +81,7 @@ def process_message(self, msg: dict) -> str:
     return "ok"
 
 
-@celery_app.task(name="vega.deliver_reply", bind=True, max_retries=3, default_retry_delay=10)
+@celery_app.task(name="solara.deliver_reply", bind=True, max_retries=3, default_retry_delay=10)
 def deliver_reply(self, payload: dict) -> str:
     """Envia a resposta pelo WhatsApp (texto sempre; áudio quando fizer sentido).
     Retentativa só do envio — o cérebro e os registros já rodaram uma vez."""

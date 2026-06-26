@@ -1,7 +1,7 @@
-"""Cliente do Supabase (PostgREST) — registros da Vega + dados do dashboard.
+"""Cliente do Supabase (PostgREST) — registros da Solara + dados do dashboard.
 
 Tudo via service_role (fica só no backend). É best-effort: se o Supabase
-estiver fora, a Vega continua respondendo (só não grava o registro).
+estiver fora, a Solara continua respondendo (só não grava o registro).
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ import httpx
 
 from app.config import settings
 
-logger = logging.getLogger("vega.supabase")
+logger = logging.getLogger("solara.supabase")
 
 _TIMEOUT = httpx.Timeout(15.0, connect=8.0)
 

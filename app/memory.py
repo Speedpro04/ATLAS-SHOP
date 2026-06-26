@@ -2,7 +2,7 @@
 
 Cada lead (telefone) tem uma lista de mensagens no formato do chat do OpenAI:
 {"role": "user"|"assistant", "content": "..."}. Guardamos também um pequeno
-perfil (nome, marina, nº de barcos) que a Vega vai preenchendo via metadados.
+perfil (nome, marina, nº de barcos) que a Solara vai preenchendo via metadados.
 """
 
 from __future__ import annotations
@@ -17,11 +17,11 @@ _redis = redis.Redis.from_url(settings.redis_url, decode_responses=True)
 
 
 def _history_key(phone: str) -> str:
-    return f"vega:history:{phone}"
+    return f"solara:history:{phone}"
 
 
 def _profile_key(phone: str) -> str:
-    return f"vega:profile:{phone}"
+    return f"solara:profile:{phone}"
 
 
 def get_history(phone: str) -> list[dict[str, str]]:

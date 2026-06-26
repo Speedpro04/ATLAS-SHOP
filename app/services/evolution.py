@@ -15,7 +15,7 @@ import httpx
 
 from app.config import settings
 
-logger = logging.getLogger("vega.evolution")
+logger = logging.getLogger("solara.evolution")
 
 _TIMEOUT = httpx.Timeout(30.0, connect=10.0)
 

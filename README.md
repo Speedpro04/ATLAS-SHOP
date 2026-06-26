@@ -1,15 +1,15 @@
-# 🛥️ Vega — Vendedora Digital Yachts Atlas
+# 🛥️ Solara — Vendedora Digital Yachts Atlas
 
 Vendedora digital por WhatsApp (texto + voz) para o **Programa Marinas Fundadoras**.
-Persona **Vega**, método **SPIN Selling**, cérebro **GPT-5-mini**.
+Persona **Solara**, método **SPIN Selling**, cérebro **GPT-5-mini**.
 
 - **FastAPI** — recebe o webhook da Evolution e responde na hora (200), enfileirando o trabalho.
 - **Celery + Redis** — processam a mensagem em background (transcreve → pensa → fala → envia).
 - **Redis** — também guarda a memória da conversa por lead.
 - **Evolution API** — canal WhatsApp (recebe/envia texto e áudio).
-- **OmniVoice** — STT (ouvir o lead) e TTS (voz da Vega).
+- **OmniVoice** — STT (ouvir o lead) e TTS (voz da Solara).
 
-Conhecimento e regras da persona: [VEGA-SYSTEM-PROMPT.md](VEGA-SYSTEM-PROMPT.md) ·
+Conhecimento e regras da persona: [SOLARA-SYSTEM-PROMPT.md](SOLARA-SYSTEM-PROMPT.md) ·
 base completa: [VENDEDOR-DIGITAL-ATLAS-SHOP.md](VENDEDOR-DIGITAL-ATLAS-SHOP.md).
 
 ---
@@ -24,7 +24,7 @@ WhatsApp ──▶ Evolution API ──webhook──▶ FastAPI (/webhook/evolut
                                            │
               ┌────────────────────────────┼─────────────────────────────┐
               ▼                             ▼                             ▼
-       OmniVoice STT              GPT-5-mini (Vega +              OmniVoice TTS
+       OmniVoice STT              GPT-5-mini (Solara +             OmniVoice TTS
      (se veio áudio)             histórico do Redis)           (resposta curta)
                                            │
                                            ▼
@@ -51,14 +51,14 @@ app/
     evolution.py     Enviar texto/áudio, baixar mídia
     voice.py         OmniVoice STT/TTS
 prompts/
-  vega_system_prompt.txt   System prompt da Vega
+  solara_system_prompt.txt   System prompt da Solara
 ```
 
 ---
 
 ## Como rodar
 
-### Opção A — Docker (recomendado)
+### Opção A — Docker (Recomendado)
 
 ```bash
 cp .env.example .env      # preencha as chaves
@@ -67,7 +67,7 @@ docker compose up --build
 
 Sobe `redis`, `api` (porta 8000) e `worker`.
 
-### Opção B — Local (dev)
+### Opção B — Local (Dev)
 
 Precisa de um Redis rodando (`redis://localhost:6379/0`).
 
@@ -80,7 +80,7 @@ cp .env.example .env       # preencha as chaves
 uvicorn app.main:app --reload --port 8000
 
 # Terminal 2 — Worker do Celery
-celery -A app.celery_app.celery_app worker --loglevel=info --queues=vega
+celery -A app.celery_app.celery_app worker --loglevel=info --queues=solara
 ```
 
 Verifique: `GET http://localhost:8000/health` deve retornar `{"status":"ok","redis":true}`.
@@ -89,12 +89,12 @@ Verifique: `GET http://localhost:8000/health` deve retornar `{"status":"ok","red
 
 ## Configurar o webhook na Evolution API
 
-Aponte a instância para a API da Vega (com o token):
+Aponte a instância para a API da Solara (com o token):
 
 ```
 URL do webhook:  https://SEU-HOST/webhook/evolution?token=SEU_WEBHOOK_TOKEN
 Eventos:         MESSAGES_UPSERT
-Base64 de mídia: ATIVADO  (para a Vega receber o áudio do lead direto)
+Base64 de mídia: ATIVADO  (para a Solara receber o áudio do lead direto)
 ```
 
 Variáveis em `.env` (veja `.env.example` para a lista completa): `OPENAI_API_KEY`,
@@ -103,7 +103,7 @@ Variáveis em `.env` (veja `.env.example` para a lista completa): `OPENAI_API_KE
 
 > ⚠️ **OmniVoice:** os endpoints em `app/services/voice.py` são uma suposição razoável
 > (`/v1/transcriptions` e `/v1/speech`). Ajuste caminho/headers conforme a doc da sua conta.
-> Sem OmniVoice configurado, a Vega funciona **só em texto** (degrada com segurança).
+> Sem OmniVoice configurado, a Solara funciona **só em texto** (degrada com segurança).
 
 ---
 
@@ -116,7 +116,7 @@ curl -X POST "http://localhost:8000/webhook/evolution?token=SEU_WEBHOOK_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "event": "messages.upsert",
-    "instance": "vega",
+    "instance": "solara",
     "data": {
       "key": {"remoteJid": "5512999999999@s.whatsapp.net", "fromMe": false, "id": "ABC"},
       "pushName": "Marina Teste",
@@ -125,15 +125,15 @@ curl -X POST "http://localhost:8000/webhook/evolution?token=SEU_WEBHOOK_TOKEN" \
   }'
 ```
 
-A resposta da Vega chega no WhatsApp do número (precisa da Evolution conectada).
+A resposta da Solara chega no WhatsApp do número (precisa da Evolution conectada).
 
 ---
 
 ## Guard rails
 
-As regras invioláveis da Vega (não certifica pela Marinha, não promete retorno,
+As regras invioláveis da Solara (não certifica pela Marinha, não promete retorno,
 não cita outras marinas, sempre agenda os 15 min) vivem no system prompt em
-`prompts/vega_system_prompt.txt`. Edite lá para ajustar o comportamento — não
+`prompts/solara_system_prompt.txt`. Edite lá para ajustar o comportamento — não
 precisa mexer no código.
 
 *Um produto Axos Hub.*

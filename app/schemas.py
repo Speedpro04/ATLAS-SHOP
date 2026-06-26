@@ -39,7 +39,9 @@ def parse_webhook(payload: dict[str, Any]) -> IncomingMessage | None:
     Retorna None se o evento não for uma mensagem de texto/áudio recebida.
     """
     event = (payload.get("event") or "").lower().replace("_", ".")
-    if event and event != "messages.upsert":
+    # Aceitar variações da Evolution: messages.upsert, message, messages_upsert, etc.
+    # Rejeitar apenas eventos que claramente NÃO são mensagens (ex: connection.update, qrcode)
+    if event and "message" not in event:
         return None
 
     data = payload.get("data") or {}

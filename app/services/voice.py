@@ -1,4 +1,4 @@
-"""OmniVoice — STT (transcrever áudio do lead) e TTS (voz da Vega).
+"""OmniVoice — STT (transcrever áudio do lead) e TTS (voz da Solara).
 
 A API exata depende da sua conta OmniVoice. Concentramos as suposições aqui,
 em duas funções simples, para você ajustar caminho/headers num só lugar:
@@ -7,7 +7,7 @@ em duas funções simples, para você ajustar caminho/headers num só lugar:
   TTS: POST {base}/v1/speech           (json com o texto)       -> bytes de áudio
 
 Ambas falham de forma segura (retornam None) para não derrubar o fluxo: sem
-STT, a Vega pede o texto; sem TTS, ela responde só em texto.
+STT, a Solara pede o texto; sem TTS, ela responde só em texto.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ import httpx
 
 from app.config import settings
 
-logger = logging.getLogger("vega.voice")
+logger = logging.getLogger("solara.voice")
 
 _TIMEOUT = httpx.Timeout(60.0, connect=10.0)
 

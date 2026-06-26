@@ -1,4 +1,4 @@
-"""Configurações da Vega — lidas do ambiente (.env).
+"""Configurações da Solara — lidas do ambiente (.env).
 
 Secrets nunca entram no código: tudo vem de variáveis de ambiente.
 Veja `.env.example`.
@@ -13,7 +13,7 @@ from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-PROMPT_PATH = BASE_DIR / "prompts" / "vega_system_prompt.txt"
+PROMPT_PATH = BASE_DIR / "prompts" / "solara_system_prompt.txt"
 
 
 class Settings(BaseSettings):
@@ -67,7 +67,7 @@ class Settings(BaseSettings):
 
     @property
     def system_prompt(self) -> str:
-        """Lê o system prompt da Vega do arquivo de texto."""
+        """Lê o system prompt da Solara do arquivo de texto."""
         return PROMPT_PATH.read_text(encoding="utf-8")
 
 
