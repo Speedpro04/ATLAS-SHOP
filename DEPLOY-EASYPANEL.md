@@ -55,6 +55,9 @@ https://atlasshop.yachtsatlas.online/webhook/evolution?token=vega-axos-2026
 Eventos: MESSAGES_UPSERT   ·   Base64 de mídia: ATIVADO
 ```
 
+Se você ativar webhook por evento na Evolution, a aplicação também aceita
+`/webhook/evolution/messages-upsert`.
+
 ## 5. Pronto
 - Dashboard: `https://atlasshop.yachtsatlas.online/`
 - A Solara já grava leads/mensagens no Supabase e o painel atualiza sozinho.

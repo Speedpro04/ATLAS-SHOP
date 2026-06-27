@@ -75,8 +75,10 @@ def _authorized(token_q: str | None, apikey: str | None) -> bool:
 
 
 @app.post("/webhook/evolution")
+@app.post("/webhook/evolution/{event_path:path}")
 async def evolution_webhook(
     request: Request,
+    event_path: str | None = None,
     token: str | None = Query(default=None),
     apikey: str | None = Header(default=None),
 ) -> JSONResponse:
@@ -102,8 +104,12 @@ async def evolution_webhook(
     from_me = key.get("fromMe", "?") if isinstance(key, dict) else "?"
 
     logger.info(
-        "📩 Webhook recebido: event=%s | jid=%s | fromMe=%s | instance=%s",
-        event, remote_jid, from_me, payload.get("instance", "?"),
+        "📩 Webhook recebido: event=%s | path=%s | jid=%s | fromMe=%s | instance=%s",
+        event,
+        event_path or "-",
+        remote_jid,
+        from_me,
+        payload.get("instance", "?"),
     )
 
     # --- Parse para IncomingMessage ---

@@ -97,6 +97,9 @@ Eventos:         MESSAGES_UPSERT
 Base64 de mídia: ATIVADO  (para a Solara receber o áudio do lead direto)
 ```
 
+Se a Evolution estiver em modo "webhook por evento", ela pode chamar algo como
+`/webhook/evolution/messages-upsert`. A Solara aceita os dois formatos.
+
 Variáveis em `.env` (veja `.env.example` para a lista completa): `OPENAI_API_KEY`,
 `EVOLUTION_BASE_URL`, `EVOLUTION_API_KEY`, `EVOLUTION_INSTANCE`, `OMNIVOICE_*`,
 `WEBHOOK_TOKEN`, `REDIS_URL`.
