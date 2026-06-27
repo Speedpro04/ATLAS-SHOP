@@ -32,7 +32,7 @@ No EasyPanel → projeto → **+ Service** → **App**:
   SUPABASE_SERVICE_KEY=sb_secret_...
   EVOLUTION_BASE_URL=https://evoapi.axoshub.com
   EVOLUTION_API_KEY=...
-  EVOLUTION_INSTANCE=Ativo_Hub
+  EVOLUTION_INSTANCE=Atlas
   VOICE_REPLY_ENABLED=false
   ```
 - **Deploy** → aguarde o build. Teste: `https://SEU-DOMINIO/health` deve dar `{"status":"ok","redis":true}`.
@@ -49,7 +49,7 @@ No EasyPanel → projeto → **+ Service** → **App**:
 - **Deploy.**
 
 ## 4. Apontar o webhook da Evolution
-Na Evolution (instância `Ativo_Hub`), configure o webhook para:
+Na Evolution (instância `Atlas`), configure o webhook para:
 ```
 https://atlasshop.yachtsatlas.online/webhook/evolution?token=vega-axos-2026
 Eventos: MESSAGES_UPSERT   ·   Base64 de mídia: ATIVADO
@@ -61,7 +61,7 @@ Se você ativar webhook por evento na Evolution, a aplicação também aceita
 ## 5. Pronto
 - Dashboard: `https://atlasshop.yachtsatlas.online/`
 - A Solara já grava leads/mensagens no Supabase e o painel atualiza sozinho.
-- Conecte o WhatsApp da instância `Ativo_Hub` (parear QR) pra ela responder de verdade.
+- Conecte o WhatsApp da instância `Atlas` (parear QR) pra ela responder de verdade.
 
 ---
 
